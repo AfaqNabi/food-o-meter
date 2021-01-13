@@ -27,98 +27,119 @@ import { firebase } from "/Users/afaqnabi/Desktop/mobile_app/food-o-meter/compon
 import firestore from "@react-native-firebase/firestore";
 import Home from "../Home/Home";
 
-export default class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isReady: false,
-      email: "",
-      password: "",
-    };
+const signUpUser = (email, password) => {
+  try {
+    if (password.length < 6) {
+      alert("please enter atleast 6 characters");
+      return;
+    }
+    firebase.auth().createUserWithEmailAndPassword(email, password);
+  } catch (error) {
+    console.log(error.toString());
+  }
+};
+
+const loginUser = (email, password, navigation) => {
+  console.log(email);
+  try {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => navigation.navigate("Home"))
+      .then(
+        userDoc.add({
+          email: email,
+        })
+      );
+  } catch (error) {
+    console.log(error.toString());
+  }
+};
+
+const Login = ({ navigation }) => {
+  const [isReady, setReady] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      await Font.loadAsync({
+        Roboto: require("native-base/Fonts/Roboto.ttf"),
+        Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+        ...Ionicons.font,
+      });
+      setReady(true);
+    })();
+  }, []);
+
+  if (!isReady) {
+    return <AppLoading />;
   }
 
-  signUpUser = (email, password) => {
-    try {
-      if (this.state.password.length < 6) {
-        alert("please enter atleast 6 characters");
-        return;
-      }
-      firebase.auth().createUserWithEmailAndPassword(email, password);
-    } catch (error) {
-      console.log(error.toString());
-    }
-  };
+  return (
+    <Container>
+      <Header>
+        <Left>
+          <Button transparent>
+            <Icon name="menu" />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Calorie Calculator</Title>
+        </Body>
+        <Right />
+      </Header>
+      <Content>
+        <Form>
+          <Item floatingLabel>
+            <Label>Email</Label>
+            <Input
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={(email) => setEmail(email)}
+            />
+          </Item>
 
-  loginUser = (email, password) => {
-    try {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(this.props.navigation.navigate("Home"));
-    } catch (error) {
-      console.log(error.toString());
-    }
-  };
+          <Item floatingLabel>
+            <Label>Password</Label>
+            <Input
+              secureTextEntry={true}
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={(password) => setPassword(password)}
+            />
+          </Item>
 
-  render() {
-    if (!this.state.isReady) {
-      return <AppLoading />;
-    }
+          <Button
+            style={{ marginTop: 10 }}
+            full
+            rounded
+            success
+            onPress={() => loginUser(email, password, navigation)}
+          >
+            <Text> Login</Text>
+          </Button>
 
-    return (
-      <Container>
-        <Content>
-          <Form>
-            <Item floatingLabel>
-              <Label>Email</Label>
-              <Input
-                autoCorrect={false}
-                autoCapitalize="none"
-                onChangeText={(email) => this.setState({ email })}
-              />
-            </Item>
+          <Button
+            style={{ marginTop: 10 }}
+            full
+            rounded
+            primary
+            onPress={() => signUpUser(email, password)}
+          >
+            <Text style={{ color: "white" }}> Sign up</Text>
+          </Button>
+        </Form>
+      </Content>
+      <Footer>
+        <FooterTab>
+          <Button full>
+            <Text>food-o-meter 2021™</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Container>
+  );
+};
 
-            <Item floatingLabel>
-              <Label>Password</Label>
-              <Input
-                secureTextEntry={true}
-                autoCorrect={false}
-                autoCapitalize="none"
-                onChangeText={(password) => this.setState({ password })}
-              />
-            </Item>
-
-            <Button
-              style={{ marginTop: 10 }}
-              full
-              success
-              onPress={() =>
-                this.loginUser(this.state.email, this.state.password)
-              }
-            >
-              <Text> Login</Text>
-            </Button>
-
-            <Button
-              style={{ marginTop: 10 }}
-              full
-              primary
-              onPress={() =>
-                this.signUpUser(this.state.email, this.state.password)
-              }
-            >
-              <Text style={{ color: "white" }}> Sign up</Text>
-            </Button>
-          </Form>
-        </Content>
-        <Footer>
-          <FooterTab>
-            <Button full>
-              <Text>food-o-meter 2021™</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
-    );
-  }
-}
+export default Login;

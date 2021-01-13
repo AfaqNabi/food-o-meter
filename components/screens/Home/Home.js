@@ -27,31 +27,33 @@ import AddTab from "../AddTab/AddTab";
 
 export default function Home() {
   // const doc = db.collection("recipe");
-  return (
-    <Container>
-      <Header searchBar>
-        <Item>
-          <Icon name="ios-search" />
-          <Input placeholder="Find yummy foods" />
-        </Item>
-      </Header>
-      <Content>
-        <Card>
-          <CardItem header>
-            <Text>Recipe Name</Text>
-          </CardItem>
-          <CardItem>
-            <Body>
-              <Text>Breif description of recipe</Text>
-            </Body>
-          </CardItem>
-          <CardItem footer>
-            <Text>comment</Text>
-          </CardItem>
-        </Card>
-      </Content>
-    </Container>
-  );
+  function HomeScreen() {
+    return (
+      <Container>
+        <Header searchBar>
+          <Item>
+            <Icon name="ios-search" />
+            <Input placeholder="Find yummy foods" />
+          </Item>
+        </Header>
+        <Content>
+          <Card>
+            <CardItem header>
+              <Text>Recipe Name</Text>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Text>Breif description of recipe</Text>
+              </Body>
+            </CardItem>
+            <CardItem footer>
+              <Text>comment</Text>
+            </CardItem>
+          </Card>
+        </Content>
+      </Container>
+    );
+  }
 
   const Tab = createBottomTabNavigator();
   const onPressProfile = () => {
